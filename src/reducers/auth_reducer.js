@@ -1,0 +1,10 @@
+import { AUTH_USER, INVALIDATE_USER } from '../actions/types';
+export default function (state = {}, action) {
+  switch (action.type) {
+    case AUTH_USER:
+      return { ...state, authenticated: true };
+    case INVALIDATE_USER:
+      return { ...state, authenticated: false };
+    default: return state;
+  }
+}
