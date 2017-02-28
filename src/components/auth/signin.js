@@ -4,7 +4,6 @@ import * as actions from '../../actions';
 
 class Signin extends Component {
   handleFormSubmit({ email, password }) {
-    console.log(email, password);
     this.props.signinUser({ email, password });
   }
   renderAlert() {
@@ -18,7 +17,7 @@ class Signin extends Component {
   }
   render() {
     const { handleSubmit, fields: { email, password } } = this.props;
-    return (<form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
+    return (<form className="col-sm-4 col-sm-offset-4 text-center" onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
         <fieldset className="form-group">
             <label htmlFor="">Email:</label>
             <input {...email} className="form-control" />

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { browserHistory } from 'react-router';
-import { AUTH_USER, AUTH_ERROR, INVALIDATE_USER } from './types';
+import { AUTH_USER, AUTH_ERROR, INVALIDATE_USER, FETCH_MESSAGE } from './types';
 
 const ROOT_URL = 'http://localhost:3090';
 
@@ -13,16 +13,31 @@ export function signinUser({ email, password }) {
       dispatch({ type: AUTH_USER });
  // save the jwt token
       window.localStorage.setItem('token', response.data.token);
-      console.log(response.data.token);
 
  // redirect to the route
-      browserHistory.push('/feature');
+      browserHistory.push('/devextreme');
     })
     .catch(() => {
  // if request is bad
       dispatch(authError('Bad login info'));
  // show error
     });
+  };
+}
+
+export function signupUser({ email, password }) {
+  return function (dispatch) {
+    axios.post(`${ROOT_URL}/signup`, { email, password })
+    .then((response) => {
+      dispatch({
+        type: AUTH_USER
+      });
+      window.localStorage.setItem('token', response.data.token);
+      browserHistory.push('/devextreme');
+    })
+     .catch((error) => {
+       dispatch(authError(error.response.data.error));
+     });
   };
 }
 
@@ -37,5 +52,23 @@ export function signoutUser() {
   window.localStorage.removeItem('token');
   return {
     type: INVALIDATE_USER
+  };
+}
+
+export function fetchMessage() {
+  return function (dispatch) {
+    axios.get(ROOT_URL, {
+      headers: { authorization: window.localStorage.getItem('token') }
+    })
+    .then((response) => {
+      dispatch({
+        type: FETCH_MESSAGE,
+        payload: response.data.message
+      });
+    }).catch(function (error) {
+      console.log(error.response);
+      window.localStorage.removeItem('token');
+      browserHistory.push('/signout');
+    });
   };
 }
