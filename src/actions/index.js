@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { browserHistory } from 'react-router';
 import { AUTH_USER, AUTH_ERROR, INVALIDATE_USER, FETCH_MESSAGE } from './types';
+import Service from '../components/service';
 
 const ROOT_URL = 'http://localhost:3090';
 
@@ -56,19 +57,17 @@ export function signoutUser() {
 }
 
 export function fetchMessage() {
-  return function (dispatch) {
-    axios.get(ROOT_URL, {
-      headers: { authorization: window.localStorage.getItem('token') }
-    })
-    .then((response) => {
-      dispatch({
-        type: FETCH_MESSAGE,
-        payload: response.data.message
-      });
-    }).catch(function (error) {
-      console.log(error.response);
-      window.localStorage.removeItem('token');
-      browserHistory.push('/signout');
-    });
+  return (dispatch) => {
+    return (
+        Service.get(ROOT_URL,
+        (status, data) => {
+          //  dispatch fetch message
+          dispatch({
+            type: FETCH_MESSAGE,
+            payload: data.message
+          });
+        }
+        )
+      );
   };
 }

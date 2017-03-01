@@ -8,7 +8,6 @@ import {} from 'devextreme/ui/data_grid';
 class button extends Component {
   componentDidMount() {
     this.props.fetchMessage();
-    console.log(this.props);
     if (1 > 0) {
       $('#datagrid').dxDataGrid({
         'dataSource': [
